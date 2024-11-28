@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import GroupDetails from "./pages/GroupDetails";
+import LoanDetailsPage from "./pages/LoanDetails";
 
-function App() {
+const App = () => {
+  const [groups, setGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+
+  const updateGroup = (updatedGroup) => {
+    setGroups(groups.map((g) => (g.id === updatedGroup.id ? updatedGroup : g)));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Dashboard
+                groups={groups}
+                setGroups={setGroups}
+                setSelectedGroup={setSelectedGroup}
+              />
+            }
+          />
+          <Route
+            path="/group-details"
+            element={
+              <GroupDetails
+                group={selectedGroup}
+                updateGroup={updateGroup}
+              />
+            }
+          />
+          <Route
+            path="/loan-details"
+            element={<LoanDetailsPage group={selectedGroup} />}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
